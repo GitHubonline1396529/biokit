@@ -69,7 +69,9 @@ class Taxonomy(object):
         self.ftp.cwd("taxonomy")
 
         print("Downloading and saving in %s" % self.filename)
-        self.ftp.retrbinary("RETR taxonomy.dat", open(self.filename, "wb").write)
+        self.ftp.retrbinary(
+            "RETR taxonomy.dat", open(self.filename, "wb").write
+        )
 
     def load_records(self, overwrite=False):
         """Load a flat file and store records in :attr:`records`"""

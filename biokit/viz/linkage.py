@@ -1,11 +1,12 @@
 """Heatmap and dendograms"""
+
 import warnings
 import scipy.cluster.hierarchy as hierarchy
 import scipy.spatial.distance as distance
 import easydev
 
 
-__all__ = ['Linkage']
+__all__ = ["Linkage"]
 
 
 class Linkage(object):
@@ -22,16 +23,18 @@ class Linkage(object):
     def check_metric(self, value):
         return
         from biokit.viz.commons import valid_metrics
+
         easydev.check_param_in_list(value, valid_metrics)
 
     def check_method(self, value):
         # None is possible
-        # in R, in addition to single, complete, average, centroid, 
+        # in R, in addition to single, complete, average, centroid,
         # median and ward
         # there are  ward.D, wardD2 and mcquitty
         # default is complete
         return
         from biokit.viz.commons import valid_methods
+
         easydev.check_param_in_list(str(value), valid_methods)
 
     def linkage(self, df, method, metric):
@@ -42,6 +45,6 @@ class Linkage(object):
 
         # hierarchy.ClusterWarning
         with warnings.catch_warnings():
-            warnings.filterwarnings('ignore')
+            warnings.filterwarnings("ignore")
             Y = hierarchy.linkage(D, method=method, metric=metric)
             return Y

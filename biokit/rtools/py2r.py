@@ -181,13 +181,15 @@ def NumpyNdarrayStr(obj):
         tp = obj.dtype
         if tp.kind != "V":
             return getVec(obj)
+
         # One-dimension record array will be converted to data.frame
         def mapField(f):
             ary = obj[f]
             tp = ary.dtype.kind
             return '"%s"=%s' % (
                 f,
-                _tpdic.get(tp, "list(%s)") % SeqStr(ary.tolist(), enclose=False),
+                _tpdic.get(tp, "list(%s)")
+                % SeqStr(ary.tolist(), enclose=False),
             )
 
         return "data.frame(%s)" % (", ".join(map(mapField, tp.names)))
@@ -215,7 +217,9 @@ def PandasSerieStr(obj):
 def PandasDataFrameStr(obj):
     # DataFrame will be converted to data.frame, have to explicitly name columns
     # return 'data.frame(%s, row.names=%s)' % (', '.join(map(lambda a,b=obj:a+'='+getVec(obj[a]), obj)), getVec(obj.index))
-    s = ", ".join(map(lambda a, b=obj: '"%s"=%s' % (str(a), getVec(obj[a])), obj))
+    s = ", ".join(
+        map(lambda a, b=obj: '"%s"=%s' % (str(a), getVec(obj[a])), obj)
+    )
     return "data.frame(%srow.names=%s)" % (s and s + ", ", getVec(obj.index))
     s = ""
     for col in obj:
@@ -269,7 +273,9 @@ base_tps = [
 str_func[numpy.ndarray] = NumpyNdarrayStr
 base_tps.append(numpy.ndarray)
 
-str_func.update({pandas.Series: PandasSerieStr, pandas.DataFrame: PandasDataFrameStr})
+str_func.update(
+    {pandas.Series: PandasSerieStr, pandas.DataFrame: PandasDataFrameStr}
+)
 base_tps.extend([pandas.Series, pandas.DataFrame])
 base_tps.reverse()
 

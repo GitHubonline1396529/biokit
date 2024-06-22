@@ -1,4 +1,5 @@
 """RNA sequence"""
+
 import string
 from biokit.sequence.seq import Sequence
 

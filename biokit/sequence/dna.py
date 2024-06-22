@@ -1,4 +1,5 @@
 """DNA sequence"""
+
 import string
 
 """

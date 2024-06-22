@@ -16,7 +16,9 @@ class KDE(object):
         # the input data.  To make the results comparable to the
         # other methods, we divide the bandwidth by the sample
         # standard deviation here.
-        kde = gaussian_kde(self.data, bw_method=bandwidth / self.std(ddof=1), **kwargs)
+        kde = gaussian_kde(
+            self.data, bw_method=bandwidth / self.std(ddof=1), **kwargs
+        )
         return kde.evaluate(x_grid)
 
     def kde_statsmodels_u(self, x_grid, bandwidth=0.2, **kwargs):

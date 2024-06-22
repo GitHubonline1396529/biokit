@@ -5,6 +5,7 @@ Resources: geneontology.org and godb Python package from endrebak user (Bakken).
 https://github.com/endrebak/godb/
 
 """
+
 import urllib
 import os
 from collections import defaultdict
@@ -81,7 +82,9 @@ class GOId(object):
         elif isinstance(value, int):
             suffix = value
         else:
-            raise TypeError("value must be a string or an integer. Provided %s" % value)
+            raise TypeError(
+                "value must be a string or an integer. Provided %s" % value
+            )
 
         if suffix < 1e7:
             goId = "GO:%07d" % suffix
@@ -168,7 +171,9 @@ class GOTerm(object):
 
     def __init__(self, text, remove_comments=True):
         if text.startswith("<obo>"):
-            raise NotImplementedError("obo XML format, use obo plain text instead")
+            raise NotImplementedError(
+                "obo XML format, use obo plain text instead"
+            )
         elif "id:" in text and "name:" in text:
             # assume that the text is a OBO formatted text
             self.text = text[:]
@@ -250,10 +255,16 @@ class GOTerm(object):
                         "%s must be found only once. Check %s" % (k, d["id"])
                     )
             elif k in deprecated.keys():
-                print("%s deprecated. Kept and assuming non unique tag" % (k, d["id"]))
+                print(
+                    "%s deprecated. Kept and assuming non unique tag"
+                    % (k, d["id"])
+                )
                 dd[k] = v
             else:
-                print("%s not handled in %s. Assuming non unique tag" % (k, d["id"]))
+                print(
+                    "%s not handled in %s. Assuming non unique tag"
+                    % (k, d["id"])
+                )
                 dd[k] = v
         if self.remove_comments is True:
             dd = self._remove_comments(dd)
@@ -355,7 +366,13 @@ class GODB(object):
         # replace some columns
         df = self.df.copy()
         df = df[["namespace", "name", "synonym", "def", "relationship"]]
-        df.columns = ["Ontology", "Term", "Synonym", "Definition", "relationship"]
+        df.columns = [
+            "Ontology",
+            "Term",
+            "Synonym",
+            "Definition",
+            "relationship",
+        ]
         return df
 
     def search(self, search, where="name", method="in"):
@@ -381,7 +398,9 @@ class GODB(object):
     # always has B as a part, i.e. where A necessarily has part B. If A exists,
     # B will always exist; however, if B exists, we cannot say for certain that
     # A exists. i.e. all A have part B; some B part of A.
-    def get_children(self, ontology="CC", relations=["is_a", "part_of", "has_part"]):
+    def get_children(
+        self, ontology="CC", relations=["is_a", "part_of", "has_part"]
+    ):
         """http://geneontology.org/page/ontology-relations"""
 
         if ontology in ["CC", "cellular_component"]:
@@ -391,7 +410,9 @@ class GODB(object):
         elif ontology in ["MF", "molecular_function"]:
             ontology = "molecular_function"
         else:
-            raise ValueError("ontology must be one of %s" % set(self.df.namespace))
+            raise ValueError(
+                "ontology must be one of %s" % set(self.df.namespace)
+            )
 
         newdf = self.df.loc[self.df.namespace == ontology]
 

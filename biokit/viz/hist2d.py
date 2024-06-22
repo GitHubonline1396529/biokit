@@ -3,6 +3,7 @@
 
 
 """
+
 import pylab
 import pandas as pd
 import numpy as np
@@ -28,6 +29,7 @@ class Hist2D(VizInput2D):
         h.plot(bins=100, contour=True)
 
     """
+
     def __init__(self, x, y=None, verbose=False):
         """.. rubric:: constructor
 
@@ -37,9 +39,22 @@ class Hist2D(VizInput2D):
         """
         super(Hist2D, self).__init__(x=x, y=y, verbose=verbose)
 
-    def plot(self, bins=100, cmap="hot_r", fontsize=10, Nlevels=4,
-        xlabel=None, ylabel=None, norm=None, range=None, normed=False,
-        colorbar=True, contour=True, grid=True, **kargs):
+    def plot(
+        self,
+        bins=100,
+        cmap="hot_r",
+        fontsize=10,
+        Nlevels=4,
+        xlabel=None,
+        ylabel=None,
+        norm=None,
+        range=None,
+        normed=False,
+        colorbar=True,
+        contour=True,
+        grid=True,
+        **kargs
+    ):
         """plots histogram of mean across replicates versus coefficient variation
 
         :param int bins: binning for the 2D histogram (either a float or list
@@ -65,13 +80,21 @@ class Hist2D(VizInput2D):
             print("Computing 2D histogram. Please wait")
 
         pylab.clf()
-        if norm == 'log':
+        if norm == "log":
             from matplotlib import colors
-            res = pylab.hist2d(X, Y, bins=bins, density=normed,
-               cmap=cmap, norm=colors.LogNorm())
+
+            res = pylab.hist2d(
+                X,
+                Y,
+                bins=bins,
+                density=normed,
+                cmap=cmap,
+                norm=colors.LogNorm(),
+            )
         else:
-            res = pylab.hist2d(X, Y, bins=bins, cmap=cmap,
-                    density=normed, range=range)
+            res = pylab.hist2d(
+                X, Y, bins=bins, cmap=cmap, density=normed, range=range
+            )
 
         if colorbar is True:
             pylab.colorbar()
@@ -86,13 +109,17 @@ class Hist2D(VizInput2D):
 
             X, Y = pylab.meshgrid(res[1][0:bins1], res[2][0:bins2])
             if contour:
-                if res[0].max().max() < 10 and norm == 'log':
+                if res[0].max().max() < 10 and norm == "log":
                     pylab.contour(X, Y, res[0].transpose())
                 else:
-                    levels = [round(x) for x in
-                            pylab.logspace(0, pylab.log10(res[0].max().max()), Nlevels)]
+                    levels = [
+                        round(x)
+                        for x in pylab.logspace(
+                            0, pylab.log10(res[0].max().max()), Nlevels
+                        )
+                    ]
                     pylab.contour(X, Y, res[0].transpose(), levels[2:])
-                #pylab.clabel(C, fontsize=fontsize, inline=1)
+                # pylab.clabel(C, fontsize=fontsize, inline=1)
 
         if ylabel is None:
             ylabel = self.df.columns[1]
@@ -106,5 +133,3 @@ class Hist2D(VizInput2D):
             pylab.grid(True)
 
         return res
-
-

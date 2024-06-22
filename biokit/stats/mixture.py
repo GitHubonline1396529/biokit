@@ -49,7 +49,7 @@ class GaussianModel(Model):
 
     def log_density(self, data):
         # log of gaussian distribution
-        res = -((data - self.mu) ** 2) / (2 * self.sigma ** 2)
+        res = -((data - self.mu) ** 2) / (2 * self.sigma**2)
         res += -np.log(self.sigma) - half_log_two_pi
         return res
 
@@ -98,7 +98,9 @@ class PoissonModel(Model):
         # x_i log\lmabda - n \lambda
 
     def generate(self, N):
-        return np.array([scipy.stats.poisson.rvs(self.lmbda) for this in range(N)])
+        return np.array(
+            [scipy.stats.poisson.rvs(self.lmbda) for this in range(N)]
+        )
 
     def __repr__(self):
         return "Poisson[lmbda={lmbda:.4g}]".format(lmbda=self.lmbda)
@@ -136,7 +138,10 @@ class GaussianMixture(object):
         self.k = len(self.mu)
 
         if sum(self.Ns) != N:
-            print("Warning: rounding mixture ratio. total N will be %s" % sum(self.Ns))
+            print(
+                "Warning: rounding mixture ratio. total N will be %s"
+                % sum(self.Ns)
+            )
 
         for m, s, n in zip(self.mu, self.sigma, self.Ns):
             data = pylab.normal(m, s, size=n)
@@ -250,7 +255,9 @@ class Fitting(object):
 
         params = [
             [mu, sigma, pi]
-            for mu, sigma, pi in zip(params["mus"], params["sigmas"], params["pis"])
+            for mu, sigma, pi in zip(
+                params["mus"], params["sigmas"], params["pis"]
+            )
         ]
         params = list(pylab.flatten(params))
         return params
@@ -280,11 +287,17 @@ class Fitting(object):
 
         if ax:
             ax.plot(
-                X, [self.model.pdf(x, self.results.x) for x in X], color=color, lw=lw
+                X,
+                [self.model.pdf(x, self.results.x) for x in X],
+                color=color,
+                lw=lw,
             )
         else:
             pylab.plot(
-                X, [self.model.pdf(x, self.results.x) for x in X], color=color, lw=lw
+                X,
+                [self.model.pdf(x, self.results.x) for x in X],
+                color=color,
+                lw=lw,
             )
 
         K = len(self.results.x)
@@ -348,13 +361,23 @@ class GaussianMixtureFitting(Fitting):
     def _set_method(self, method):
         devtools.check_param_in_list(
             method,
-            ["Nelder-Mead", "Powell", "CG", "BFGS", "Newton-CG", "Anneal", "L-BFGS-B"],
+            [
+                "Nelder-Mead",
+                "Powell",
+                "CG",
+                "BFGS",
+                "Newton-CG",
+                "Anneal",
+                "L-BFGS-B",
+            ],
         )
         self._method = method
 
     method = property(_get_method, _set_method)
 
-    def estimate(self, guess=None, k=None, maxfev=2e4, maxiter=1e3, bounds=None):
+    def estimate(
+        self, guess=None, k=None, maxfev=2e4, maxiter=1e3, bounds=None
+    ):
         """guess is a list of parameters as expected by the model
 
 
@@ -401,7 +424,9 @@ class GaussianMixtureFitting(Fitting):
         self.results.x = params
 
         # FIXME shall we multiply by -1 ??
-        self.results.log_likelihood = self.model.log_likelihood(params, self.data)
+        self.results.log_likelihood = self.model.log_likelihood(
+            params, self.data
+        )
         if self.results.log_likelihood and unstable is False:
             self.results.AIC = criteria.AIC(
                 self.results.log_likelihood, self.k, logL=True
@@ -498,7 +523,9 @@ class EM(Fitting):
                 """
                 N_[k] = gamma[k].sum()
                 mu[k] = np.sum(gamma[k] * self.data) / N_[k]
-                sig[k] = pylab.sqrt(np.sum(gamma[k] * (self.data - mu[k]) ** 2) / N_[k])
+                sig[k] = pylab.sqrt(
+                    np.sum(gamma[k] * (self.data - mu[k]) ** 2) / N_[k]
+                )
                 pi_[k] = N_[k] / self.size
 
             self.results = {"x": p_new, "nfev": counter, "success": converged}
@@ -605,7 +632,9 @@ class AdaptativeMixtureFitting(object):
                 self.all_results[k] = self.fitting.results.copy()
 
         m = np.array([self.all_results[x][criteria] for x in self.x]).min()
-        index = np.array([self.all_results[x][criteria] for x in self.x]).argmin()
+        index = np.array(
+            [self.all_results[x][criteria] for x in self.x]
+        ).argmin()
         if self.verbose:
             print("Found min ", m, "for k  ", self.x[index])
         self.best_k = self.x[index]
@@ -614,26 +643,44 @@ class AdaptativeMixtureFitting(object):
     def plot(self, criteria="AICc"):
 
         pylab.plot(
-            self.x, [self.all_results[x]["BIC"] for x in self.x], "o-", label="BIC"
+            self.x,
+            [self.all_results[x]["BIC"] for x in self.x],
+            "o-",
+            label="BIC",
         )
         pylab.plot(
-            self.x, [self.all_results[x]["AIC"] for x in self.x], "o-", label="AIC"
+            self.x,
+            [self.all_results[x]["AIC"] for x in self.x],
+            "o-",
+            label="AIC",
         )
         pylab.plot(
-            self.x, [self.all_results[x]["AICc"] for x in self.x], "o-", label="AICc"
+            self.x,
+            [self.all_results[x]["AICc"] for x in self.x],
+            "o-",
+            label="AICc",
         )
 
         m = np.array([self.all_results[x][criteria] for x in self.x]).min()
         # [exp((m-this[criteria])/2) for this in amf.all_results]
 
         pylab.axhline(
-            m - pylab.log(0.9) * 2, color="k", label="90% equi-probability", alpha=0.9
+            m - pylab.log(0.9) * 2,
+            color="k",
+            label="90% equi-probability",
+            alpha=0.9,
         )
         pylab.axhline(
-            m - pylab.log(0.5) * 2, color="k", label="50% equi-probability", alpha=0.5
+            m - pylab.log(0.5) * 2,
+            color="k",
+            label="50% equi-probability",
+            alpha=0.5,
         )
         pylab.axhline(
-            m - pylab.log(0.3) * 2, color="k", label="30% equi-probability", alpha=0.3
+            m - pylab.log(0.3) * 2,
+            color="k",
+            label="30% equi-probability",
+            alpha=0.3,
         )
 
         pylab.legend()
@@ -654,17 +701,25 @@ class AdaptativeMixtureFitting(object):
             pylab.ylim([0, ymax])
 
         pylab.subplot(3, 1, 3)
-        min_value = np.array([self.all_results[x]["AICc"] for x in self.x]).min()
+        min_value = np.array(
+            [self.all_results[x]["AICc"] for x in self.x]
+        ).min()
         pylab.plot(
             self.x,
-            [pylab.exp((min_value - self.all_results[k]["AICc"]) / 2) for k in self.x],
+            [
+                pylab.exp((min_value - self.all_results[k]["AICc"]) / 2)
+                for k in self.x
+            ],
             "o-",
             label="AICc",
         )
         min_value = np.array([self.all_results[x]["AIC"] for x in self.x]).min()
         pylab.plot(
             self.x,
-            [pylab.exp((min_value - self.all_results[k]["AIC"]) / 2) for k in self.x],
+            [
+                pylab.exp((min_value - self.all_results[k]["AIC"]) / 2)
+                for k in self.x
+            ],
             "o-",
             label="AIC",
         )

@@ -23,7 +23,7 @@ from io import StringIO
 __all__ = ["Complexes"]
 
 
-class Complexes():
+class Complexes:
     """Manipulate complexes of Proteins
 
     This class uses Intact Complex database to extract information about
@@ -186,7 +186,8 @@ class Complexes():
         return participants
 
     participants = property(
-        _get_participants, doc="""Getter of the complex participants (full details)"""
+        _get_participants,
+        doc="""Getter of the complex participants (full details)""",
     )
 
     def _get_identifiers(self):
@@ -268,7 +269,9 @@ class Complexes():
         for k, identifiers in self.identifiers.items():
 
             # get rid of suffixes such as -1 or -PRO_xxx
-            prefixes = [x.split("-")[0] if x is not None else x for x in identifiers]
+            prefixes = [
+                x.split("-")[0] if x is not None else x for x in identifiers
+            ]
 
             # You may have a complex with ['P12222', 'P33333-PRO1',
             # 'P33333-PRO2'], in which case P33333 is found only once and
@@ -297,7 +300,9 @@ class Complexes():
         """
         found = []
         for k, identifiers in self.identifiers.items():
-            prefixes = [x.split("-")[0] if x is not None else x for x in identifiers]
+            prefixes = [
+                x.split("-")[0] if x is not None else x for x in identifiers
+            ]
             if name in prefixes:
                 self.logging.info(
                     "Found %s in complex %s (%s)" % (name, k, identifiers)

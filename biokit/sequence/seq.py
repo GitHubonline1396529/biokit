@@ -133,7 +133,9 @@ class Sequence(object):
         """checks that characters are valid symbols"""
         for i, x in enumerate(self._data):
             if x not in self.symbols:
-                raise ValueError("found invalid symbol %s at position %s" % (x, i))
+                raise ValueError(
+                    "found invalid symbol %s at position %s" % (x, i)
+                )
         self._checked = True
 
     def __repr__(self):
@@ -176,7 +178,8 @@ class Sequence(object):
             other = self.__convert_to_compat(other)
         elif type(other) != type(self):
             raise TypeError(
-                "incompatible sequences %s versus %s" % (type(other), type(self))
+                "incompatible sequences %s versus %s"
+                % (type(other), type(self))
             )
 
         # now let us add the 2 sequences
@@ -188,7 +191,8 @@ class Sequence(object):
             other = self.__convert_to_compat(other)
         elif type(other) != type(self):
             raise TypeError(
-                "incompatible sequences %s versus %s" % (type(other), type(self))
+                "incompatible sequences %s versus %s"
+                % (type(other), type(self))
             )
 
         # now let us add the 2 sequences
@@ -199,7 +203,8 @@ class Sequence(object):
             other = self.__convert_to_compat(other)
         elif type(other) != type(self):
             raise TypeError(
-                "incompatible sequences %s versus %s" % (type(other), type(self))
+                "incompatible sequences %s versus %s"
+                % (type(other), type(self))
             )
 
         # now let us add the 2 sequences

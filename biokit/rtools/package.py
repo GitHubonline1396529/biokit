@@ -50,7 +50,9 @@ def install_package(
     if os.path.exists(query):
         repos = "NULL"
     else:
-        repos = '"{0}"'.format(repos)  # we want the " to be part of the string later on
+        repos = '"{0}"'.format(
+            repos
+        )  # we want the " to be part of the string later on
 
     try:
         # PART for fetching a file on the web, download and install locally
@@ -147,10 +149,15 @@ class RPackage(object):
        by distutils so they should be replaced.
     """
 
-    def __init__(self, name, version_required=None, install=False, verbose=False):
+    def __init__(
+        self, name, version_required=None, install=False, verbose=False
+    ):
         self.name = name
         self.version_required = version_required  # the required version
-        if self.version_required and isinstance(self.version_required, str) is False:
+        if (
+            self.version_required
+            and isinstance(self.version_required, str) is False
+        ):
             raise TypeError(
                 "version_required argument must be a string e.g., 2.0, 2.0.1"
             )
@@ -276,7 +283,9 @@ class RPackageManager(object):
             # self.session.reconnect()
             self._update()
         except:
-            self.logging.warning("Could not update the packages. Call update() again")
+            self.logging.warning(
+                "Could not update the packages. Call update() again"
+            )
 
     def _compat_version(self, version):
         return version.replace("-", "a")
@@ -397,7 +406,9 @@ class RPackageManager(object):
 
         pkgs = to_list(pkg)
         for pkg in pkgs:
-            self._install(pkg, require=require, update=update, reinstall=reinstall)
+            self._install(
+                pkg, require=require, update=update, reinstall=reinstall
+            )
 
     def _install(self, pkg, require=None, update=update, reinstall=False):
         # LOCAL file
@@ -422,7 +433,8 @@ class RPackageManager(object):
 
             if require is None:
                 self.logging.info(
-                    "%s already installed with version %s" % (pkg, currentVersion)
+                    "%s already installed with version %s"
+                    % (pkg, currentVersion)
                 )
                 return
 
@@ -443,7 +455,9 @@ class RPackageManager(object):
                 if require is None:
                     return
                 currentVersion = self.get_package_version(pkg)
-                if self._get_version(currentVersion) < self._get_version(require):
+                if self._get_version(currentVersion) < self._get_version(
+                    require
+                ):
                     self.logging.warning(
                         "%s installed but current version (%s) does not fulfill your requirement"
                         % (pkg, currentVersion)

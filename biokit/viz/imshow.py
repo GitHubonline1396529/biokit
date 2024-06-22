@@ -1,10 +1,11 @@
 """Imshow utility"""
+
 from biokit.viz.core import VizInputSquare
 import pylab
 import pandas as pd
 
 
-__all__ = ['imshow', 'Imshow']
+__all__ = ["imshow", "Imshow"]
 
 
 class Imshow(VizInputSquare):
@@ -28,19 +29,30 @@ class Imshow(VizInputSquare):
         im.plot()
 
     """
+
     def __init__(self, x, verbose=True):
         """.. rubric:: constructor
 
-        :param x: input dataframe (or numpy matrix/array). 
+        :param x: input dataframe (or numpy matrix/array).
             Must be squared.
 
         """
         super(Imshow, self).__init__(x, verbose=verbose)
 
-    
-    def plot(self, interpolation='None', aspect='auto', cmap='hot', tight_layout=True,
-        colorbar=True, fontsize_x=None, fontsize_y=None, rotation_x=90,
-        xticks_on=True, yticks_on=True, **kargs):
+    def plot(
+        self,
+        interpolation="None",
+        aspect="auto",
+        cmap="hot",
+        tight_layout=True,
+        colorbar=True,
+        fontsize_x=None,
+        fontsize_y=None,
+        rotation_x=90,
+        xticks_on=True,
+        yticks_on=True,
+        **kargs
+    ):
         """wrapper around imshow to plot a dataframe
 
         :param interpolation: set to None
@@ -58,21 +70,28 @@ class Imshow(VizInputSquare):
 
         data = self.df
         pylab.clf()
-        pylab.imshow(data, interpolation=interpolation, aspect=aspect, cmap=cmap, **kargs)
+        pylab.imshow(
+            data, interpolation=interpolation, aspect=aspect, cmap=cmap, **kargs
+        )
 
         if fontsize_x == None:
-            fontsize_x = 16 #FIXME use default values
+            fontsize_x = 16  # FIXME use default values
         if fontsize_y == None:
-            fontsize_y = 16 #FIXME use default values
+            fontsize_y = 16  # FIXME use default values
 
         if yticks_on is True:
-            pylab.yticks(range(0, len(data.index)), data.index, 
-                fontsize=fontsize_y)
+            pylab.yticks(
+                range(0, len(data.index)), data.index, fontsize=fontsize_y
+            )
         else:
             pylab.yticks([])
         if xticks_on is True:
-            pylab.xticks(range(0, len(data.columns[:])), data.columns, 
-                fontsize=fontsize_x, rotation=rotation_x)
+            pylab.xticks(
+                range(0, len(data.columns[:])),
+                data.columns,
+                fontsize=fontsize_x,
+                rotation=rotation_x,
+            )
         else:
             pylab.xticks([])
 
@@ -83,23 +102,33 @@ class Imshow(VizInputSquare):
             pylab.tight_layout()
 
 
-
-
-def imshow(x, interpolation='None', aspect='auto', cmap='hot', tight_layout=True,
-        colorbar=True, fontsize_x=None, fontsize_y=None, rotation_x=90,
-        xticks_on=True, yticks_on=True, **kargs):
+def imshow(
+    x,
+    interpolation="None",
+    aspect="auto",
+    cmap="hot",
+    tight_layout=True,
+    colorbar=True,
+    fontsize_x=None,
+    fontsize_y=None,
+    rotation_x=90,
+    xticks_on=True,
+    yticks_on=True,
+    **kargs
+):
     """Alias to the class :class:`~biokit.viz.imshow.Imshow`"""
 
-    print('Deprecated. Use Imshow instead')
+    print("Deprecated. Use Imshow instead")
     i = Imshow(x)
-    i.plot(interpolation=interpolation, aspect=aspect, cmap=cmap,
-        colorbar=colorbar, fontsize_x=fontsize_x, fontsize_y=fontsize_y, 
+    i.plot(
+        interpolation=interpolation,
+        aspect=aspect,
+        cmap=cmap,
+        colorbar=colorbar,
+        fontsize_x=fontsize_x,
+        fontsize_y=fontsize_y,
         rotation_x=rotation_x,
-        xticks_on=xticks_on, yticks_on=yticks_on, **kargs)
-
-
-
-
-
-
-
+        xticks_on=xticks_on,
+        yticks_on=yticks_on,
+        **kargs
+    )

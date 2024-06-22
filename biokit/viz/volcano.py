@@ -5,7 +5,7 @@ import pylab
 import pandas as pd
 
 
-__all__ = ['Volcano']
+__all__ = ["Volcano"]
 
 
 class Volcano(object):
@@ -40,10 +40,10 @@ class Volcano(object):
 
         """
         # try to compute the FC now
-        #if self.fold_change is None:
+        # if self.fold_change is None:
         #    self.fold_change = pylab.log2(X1/X0)
 
-        #if pvalue is None:
+        # if pvalue is None:
         #    # assume a normal distribution mean 0 and sigma 1
         #    import scipy.stats
         #    self.pvalue = - pylab.log10(scipy.stats.norm.pdf(abs(self.fold_change), 0,1)),
@@ -53,19 +53,31 @@ class Volcano(object):
         assert len(self.fold_changes) == len(self.pvalues)
 
         if color is None:
-            self.color = ['blue'] * len(self.pvalues)
+            self.color = ["blue"] * len(self.pvalues)
         else:
             self.color = np.array(color)
         # TODO: check that the 3 columns have same length
         assert len(self.fold_changes) == len(self.color)
 
+        self.df = pd.DataFrame(
+            {
+                "fold_change": self.fold_changes,
+                "pvalue": self.pvalues,
+                "color": self.color,
+            }
+        )
 
-        self.df = pd.DataFrame({"fold_change": self.fold_changes,
-            "pvalue": self.pvalues, 'color': self.color})
-
-    def plot(self, size=100, alpha=0.5, marker='o', fontsize=16,
-            xlabel='fold change',
-            ylabel='p-value', pvalue_threshold=1.5, fold_change_threshold=1):
+    def plot(
+        self,
+        size=100,
+        alpha=0.5,
+        marker="o",
+        fontsize=16,
+        xlabel="fold change",
+        ylabel="p-value",
+        pvalue_threshold=1.5,
+        fold_change_threshold=1,
+    ):
         """
 
         :param size: size of the markers
@@ -85,26 +97,28 @@ class Volcano(object):
 
         colors = self.df.color
 
-        pylab.scatter(self.fold_changes[mask1],
-                self.pvalues[mask1],
-                s=size,
-                alpha=alpha,
-                c='grey', marker=marker)
-        pylab.scatter(self.fold_changes[mask2],
-                self.pvalues[mask2],
-                s=size,
-                alpha=alpha,
-                c=colors[mask2])
+        pylab.scatter(
+            self.fold_changes[mask1],
+            self.pvalues[mask1],
+            s=size,
+            alpha=alpha,
+            c="grey",
+            marker=marker,
+        )
+        pylab.scatter(
+            self.fold_changes[mask2],
+            self.pvalues[mask2],
+            s=size,
+            alpha=alpha,
+            c=colors[mask2],
+        )
 
         pylab.grid()
-        #pylab.ylim([0, pylab.ylim()[1]])
-        #M = max(abs(self.fold_change)) * 1.1
-        #pylab.xlim([-M, M])
+        # pylab.ylim([0, pylab.ylim()[1]])
+        # M = max(abs(self.fold_change)) * 1.1
+        # pylab.xlim([-M, M])
         pylab.xlabel(xlabel, fontsize=fontsize)
         pylab.ylabel(ylabel, fontsize=fontsize)
-        pylab.axhline(pvalue_threshold, color='red', linestyle='--')
-        pylab.axvline(fold_change_threshold, color='red', linestyle='--')
-        pylab.axvline(-1*fold_change_threshold, color='red', linestyle='--')
-
-
-
+        pylab.axhline(pvalue_threshold, color="red", linestyle="--")
+        pylab.axvline(fold_change_threshold, color="red", linestyle="--")
+        pylab.axvline(-1 * fold_change_threshold, color="red", linestyle="--")

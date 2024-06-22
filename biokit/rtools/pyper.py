@@ -269,7 +269,9 @@ class R(object):
         else:
             if hasattr(sys.stderr, "fileno"):
                 childstderr = sys.stderr
-            elif hasattr(sys.stderr, "_file") and hasattr(sys.stderr._file, "fileno"):
+            elif hasattr(sys.stderr, "_file") and hasattr(
+                sys.stderr._file, "fileno"
+            ):
                 childstderr = sys.stderr._file
             else:  # Give up and point child stderr at nul
                 childstderr = file("nul", "a")
@@ -313,7 +315,9 @@ class R(object):
         # tail_token_r = re.sub(r'[\(\)\.]', r'\\\1', tail_token)
         tail_cmd = 'print("%s")%s' % (tail_token, newline)
         tail_token = (
-            tail_token.replace(" ", "\\s").replace(".", "\\.").replace("+", "\\+")
+            tail_token.replace(" ", "\\s")
+            .replace(".", "\\.")
+            .replace("+", "\\+")
         )
         re_tail = re.compile(
             r'>\sprint\("%s"\)\r?\n\[1\]\s"%s"\r?\n$' % (tail_token, tail_token)
@@ -336,10 +340,14 @@ class R(object):
             params = {"fn": fn, "newline": newline, "tail_cmd": tail_cmd}
             if use_try is True:
                 CMD = 'try({source("%(fn)s")})%(newline)s ' % params
-                CMD += "dummy=file.remove(%(fn)r)%(newline)s%(tail_cmd)s" % params
+                CMD += (
+                    "dummy=file.remove(%(fn)r)%(newline)s%(tail_cmd)s" % params
+                )
             else:
                 CMD = '({source("%(fn)s")})%(newline)s ' % params
-                CMD += "dummy=file.remove(%(fn)r)%(newline)s%(tail_cmd)s" % params
+                CMD += (
+                    "dummy=file.remove(%(fn)r)%(newline)s%(tail_cmd)s" % params
+                )
 
         try:
             self.sendAll(self.prog, CMD)
@@ -405,7 +413,10 @@ class R(object):
             use_dict is None and "NULL" or use_dict and "TRUE" or "FALSE",
         )
         rlt = self.__call__(cmd, use_try=use_try)
-        head = (use_try and "try({%s})%s[1] " or "%s%s[1] ") % (cmd, self.newline)
+        head = (use_try and "try({%s})%s[1] " or "%s%s[1] ") % (
+            cmd,
+            self.newline,
+        )
         # sometimes (e.g. after "library(fastICA)") the R on Windows uses '\n' instead of '\r\n'
         head = rlt.startswith(head) and len(head) or len(head) - 1
         tail = (
@@ -463,7 +474,9 @@ class R(object):
                 pass
             self.prog = None
 
-    def __getattr__(self, obj, use_dict=None):  # to model object attribute: "r.XXX"
+    def __getattr__(
+        self, obj, use_dict=None
+    ):  # to model object attribute: "r.XXX"
         """
         :param obj: a string - the name of an R variable
         :param use_dict: named list will be returned a dict if use_dict is True,

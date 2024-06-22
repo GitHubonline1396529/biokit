@@ -3,7 +3,6 @@
 
 """
 
-
 # DNA bases
 dna_bases = ("A", "C", "T", "G")
 
